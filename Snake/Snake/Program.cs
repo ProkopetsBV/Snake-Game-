@@ -16,13 +16,13 @@ namespace Snake
         private const int mapWidth = 30;
         // глобальна змінна яка зберігає колір бортику 
         private const ConsoleColor colorBorder = ConsoleColor.Green;
-
+        // колір змії
         private const ConsoleColor bodyColor = ConsoleColor.Yellow;
         private const ConsoleColor headColor = ConsoleColor.Blue;
-
+        // колір жрачки
         private const ConsoleColor foodColor = ConsoleColor.Red;
-
-        private const int miliSecFrame = 100;
+        // стартова швидкість зміюки
+        static private int miliSecFrame = 200;
 
         private static readonly Random random = new Random();
 
@@ -42,7 +42,7 @@ namespace Snake
                 ReadKey();
             }
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         static void StartGame()
@@ -78,7 +78,7 @@ namespace Snake
                     }
 
                 }
-                if (snake.Head.X == food.X && snake.Head.Y == food.Y )
+                if (snake.Head.X == food.X && snake.Head.Y == food.Y)
                 {
                     // якщо голова потрапила на жрачку то параметер їсти = true
                     snake.Move(curentMovement, true);
@@ -87,6 +87,9 @@ namespace Snake
                     food.Drow();
                     // збільшуємо рахунок 
                     ++score;
+                    // якщо зміюку покормили то вона починає повзати швидше 
+                    if (miliSecFrame >= 50)
+                        miliSecFrame -= 5;
 
                     Task.Run(() => Beep(1200, 250));
                 }
@@ -107,7 +110,7 @@ namespace Snake
 
             }
             Task.Run(() => Beep(200, 450));
-
+            miliSecFrame = 200;
             Clear();
             SetCursorPosition(mapWidth, mapHeight);
             Console.WriteLine($"Game Over !!!  SCORE : {score}");
@@ -162,7 +165,7 @@ namespace Snake
                 food = new Pixel(random.Next(1, mapWidth - 2), random.Next(1, mapHeight - 2), foodColor);
             } while (snake.Head.X == food.X && snake.Head.Y == food.Y
                         || snake.Body.Any(b => b.X == food.X && b.Y == food.Y));
-            return food;    
+            return food;
         }
     }
 }
